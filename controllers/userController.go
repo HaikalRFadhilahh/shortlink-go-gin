@@ -95,9 +95,16 @@ func (u *UserController) Login(ctx *gin.Context) {
 	}
 
 	check := u.DB.Table("users").Where("username=?", loginHandler.Username).First(&user).RowsAffected > 0
+	if !check {
+		ctx.JSON(http.StatusUnauthorized, helper.UserResponse{
+			StatusCode: http.StatusUnauthorized,
+			Status:     "error",
+			Message:    "username or password invalid!",
+		})
+		return
+	}
 	err = bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(loginHandler.Password))
-
-	if err != nil || !check {
+	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, helper.UserResponse{
 			StatusCode: http.StatusUnauthorized,
 			Status:     "error",
