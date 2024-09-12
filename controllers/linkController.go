@@ -92,7 +92,45 @@ func (u *LinkController) DeleteLink(ctx *gin.Context) {
 }
 
 func (u *LinkController) UpdateLink(ctx *gin.Context) {
+	idLink := ctx.Param("idLink")
+	updateLinkHandler := requestHandler.UpdateLinkHanlder{}
 
+	checkLink := u.DB.Table("links").Where("id=?", idLink).First(&updateLinkHandler).RowsAffected == 1
+	if !checkLink {
+		ctx.JSON(http.StatusNotFound, helper.LinkResponse{
+			StatusCode: http.StatusNotFound,
+			Status:     "error",
+			Message:    "Data Links Not Found!",
+		})
+		return
+	}
+
+	err := ctx.ShouldBindJSON(&updateLinkHandler)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, helper.LinkResponse{
+			StatusCode: http.StatusInternalServerError,
+			Status:     "error",
+			Message:    err.Error(),
+		})
+		return
+	}
+
+	err = u.DB.Table("links").Where("id=?", idLink).Model(&models.Link{}).Updates(&updateLinkHandler).Error
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, helper.LinkResponse{
+			StatusCode: http.StatusInternalServerError,
+			Status:     "error",
+			Message:    err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, helper.LinkResponse{
+		StatusCode: http.StatusOK,
+		Status:     "success",
+		Message:    "Data link updated!",
+		Data:       updateLinkHandler,
+	})
 }
 
 func (u *LinkController) GetAllLink(ctx *gin.Context) {

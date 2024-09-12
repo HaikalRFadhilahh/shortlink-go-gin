@@ -66,6 +66,7 @@ func main() {
 		linkRoutesGroup.POST("/create", linkController.CreateLink)
 		linkRoutesGroup.DELETE("/delete/:idLink", linkController.DeleteLink)
 		linkRoutesGroup.GET("/getall", linkController.GetAllLink)
+		linkRoutesGroup.PATCH("/update/:idLink", linkController.UpdateLink)
 	}
 	// Not Found Route
 	r.Use(func(ctx *gin.Context) {
