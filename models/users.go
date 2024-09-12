@@ -12,5 +12,5 @@ type User struct {
 	Password  *string `gorm:"type:varchar(255);not null" json:"-"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Links     []Link `gorm:"foreignKey:UserId;refences:Id" json:"link"`
+	Links     []Link `gorm:"foreignKey:UserId;refences:Id" json:"link,omitempty"`
 }

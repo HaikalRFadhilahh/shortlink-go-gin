@@ -52,6 +52,9 @@ func main() {
 	r.Use(middleware.ErrorMiddleware())
 
 	// Route
+	// Primary Link for redirect
+	r.GET("/:alias", linkController.GetRedirectLink)
+
 	// User Route
 	r.POST("/auth/register", userController.Register)
 	r.POST("/auth/login", userController.Login)
@@ -61,6 +64,8 @@ func main() {
 	linkRoutesGroup.Use(middleware.CheckAuth())
 	{
 		linkRoutesGroup.POST("/create", linkController.CreateLink)
+		linkRoutesGroup.DELETE("/delete/:idLink", linkController.DeleteLink)
+		linkRoutesGroup.GET("/getall", linkController.GetAllLink)
 	}
 	// Not Found Route
 	r.Use(func(ctx *gin.Context) {
