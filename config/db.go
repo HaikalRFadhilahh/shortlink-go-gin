@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/HaikalRFadhilahh/shortlink-go-gin/helper"
 	"gorm.io/driver/mysql"
@@ -20,7 +21,7 @@ func CreateConnection() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("Database Refused!")
+		log.Println("Database Refused! Check your ENV Database Connection!")
 	}
 
 	return db, nil
